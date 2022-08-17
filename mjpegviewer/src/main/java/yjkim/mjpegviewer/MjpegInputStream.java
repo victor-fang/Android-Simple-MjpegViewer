@@ -2,6 +2,7 @@ package yjkim.mjpegviewer;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -10,11 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class MjpegInputStream extends DataInputStream{
+public class MjpegInputStream extends DataInputStream {
     // 0. Variables
+    private static final String TAG = "MjpegInputStream";
     private final static int FRAME_MAX_LENGTH = 200000;
-    private final byte[] SOI_MARKER = {(byte)0xFF, (byte)0xD8};
-    private final byte[] EOF_MARKER = {(byte)0xFF, (byte)0xD9};
+    private final byte[] SOI_MARKER = {(byte) 0xFF, (byte) 0xD8};
+    private final byte[] EOF_MARKER = {(byte) 0xFF, (byte) 0xD9};
     private int mContentLength = -1;
 
     byte[] header = null;
@@ -27,42 +29,45 @@ public class MjpegInputStream extends DataInputStream{
     int count = 0;
 
     // 1. Constructor
-    public MjpegInputStream(InputStream in){
+    public MjpegInputStream(InputStream in) {
         super(new BufferedInputStream(in, FRAME_MAX_LENGTH));
     }
 
     // 2. Methods
     /*********************************************************************************************/
     /* Return end index of certain byte sequence                                                 */
+
     /*********************************************************************************************/
-    private int getEndOfSequence(byte[] sequence) throws IOException{
+    private int getEndOfSequence(byte[] sequence) throws IOException {
         int seqIndex = 0;
         byte c;
-        for(int i = 0; i < FRAME_MAX_LENGTH; i++){
-            c = (byte)this.readUnsignedByte();
-            if(c == sequence[seqIndex]){
-                seqIndex ++;
-                if(seqIndex == sequence.length){
+        for (int i = 0; i < FRAME_MAX_LENGTH; i++) {
+            c = (byte) this.readUnsignedByte();
+            if (c == sequence[seqIndex]) {
+                seqIndex++;
+                if (seqIndex == sequence.length) {
                     return i + 1;
                 }
-            }else seqIndex = 0;
+            } else seqIndex = 0;
         }
         return -1;
     }
 
     /*********************************************************************************************/
     /* Return start index of certain byte sequence                                               */
+
     /*********************************************************************************************/
-    private int getStartOfSequence(byte[] sequence) throws IOException{
+    private int getStartOfSequence(byte[] sequence) throws IOException {
         int end = getEndOfSequence(sequence);
-        return (end < 0 ) ? -1 : (end - sequence.length);
+        return (end < 0) ? -1 : (end - sequence.length);
     }
 
     /*********************************************************************************************/
     /* Parsing HTTP header & return "Content-Length" property                                    */
+
     /*********************************************************************************************/
     private int parseContentLength(byte[] headerBytes)
-            throws IOException, NumberFormatException{
+            throws IOException, NumberFormatException {
         ByteArrayInputStream headerIn = new ByteArrayInputStream(headerBytes);
         Properties props = new Properties();
         props.load(headerIn);
@@ -71,21 +76,22 @@ public class MjpegInputStream extends DataInputStream{
 
     /*********************************************************************************************/
     /* Read one frame and return Bitmap image(Using java decoding function ..may slow)           */
+
     /*********************************************************************************************/
-    public Bitmap readMjpegFrame() throws IOException{
+    public Bitmap readMjpegFrame() throws IOException {
         mark(FRAME_MAX_LENGTH); // reading start
 
         // 1. Get Header Length
-        try{
+        try {
             headerLen = getStartOfSequence(SOI_MARKER);
-        }catch (IOException e){
+        } catch (IOException e) {
             reset();
             return null;
         }
-
+        Log.d(TAG, "headerLen=" + headerLen);
         // 2. Get Header
         reset();
-        if(header == null || headerLen != headerLenPrev){ // Header is renewed
+        if (header == null || headerLen != headerLenPrev) { // Header is renewed
             header = new byte[headerLen];
         }
         headerLenPrev = headerLen;
@@ -93,29 +99,29 @@ public class MjpegInputStream extends DataInputStream{
 
         // 3. Get Content Length
         mContentLength = -1;
-        try{
+        try {
             mContentLength = parseContentLength(header);
-        }catch (NumberFormatException nfe){ // if illegal format
+        } catch (NumberFormatException nfe) { // if illegal format
             reset();
             return null;
-        }catch (IOException e){
+        } catch (IOException e) {
             reset();
             return null;
         }
-
+        Log.d(TAG, "mContentLength=" + mContentLength);
         // 4. Get Frame data
         reset();
-        if(frameData == null){
+        if (frameData == null) {
             frameData = new byte[FRAME_MAX_LENGTH];
         }
         skipBytes(headerLen);
         readFully(frameData, 0, mContentLength);
 
-        if(count ++ % skip == 0){
+        if (count++ % skip == 0) {
             count = 0;
             //return BitmapFactory.decodeStream(new ByteArrayInputStream(frameData, 0, mContentLength));
             return BitmapFactory.decodeByteArray(frameData, 0, mContentLength);
-        }else{
+        } else {
             return null;
         }
     }

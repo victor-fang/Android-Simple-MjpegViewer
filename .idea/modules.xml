@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android-Simple-MjpegViewer.iml" filepath="$PROJECT_DIR$/.idea/modules/Android-Simple-MjpegViewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android-Simple-MjpegViewer.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.iml" filepath="$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/mjpegviewer/Android-Simple-MjpegViewer.mjpegviewer.unitTest.iml" />
+    </modules>
+  </component>
+</project>
